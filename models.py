@@ -22,7 +22,7 @@ class ModifiedMixin(object):
 class BaseModelMixin(UUIDMixin, CreatedMixin, ModifiedMixin):
     pass
 
-
+@attrs_sqlalchemy
 class Card(BaseModelMixin, db.Model):
     __tablename__ = "card"
 
