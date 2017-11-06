@@ -7,7 +7,7 @@ class BaseTestCase(unittest.TestCase):
         app.config.from_object('config.TestingConfig')
         db.create_all()
 
-        self.app = app
+        self.test_client = app.test_client()
         self.db = db
 
     def tearDown(self):
