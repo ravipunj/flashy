@@ -14,4 +14,4 @@ class User(BaseModelMixin, db.Model):
     display_name = db.Column(db.String(), nullable=False)
     email = db.Column(db.String(), nullable=False)
 
-    decks = db.relationship("Deck", back_populates="owner")
+    decks = db.relationship("Deck", backref="owner")
