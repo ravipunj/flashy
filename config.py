@@ -15,9 +15,16 @@ class ProductionConfig(Config):
 
 class StagingConfig(Config):
     DEBUG = True
-    DEVELOPMENT = True
+    DEVELOPMENT = False
 
 
 class DevelopmentConfig(Config):
     DEBUG = True
+    DEVELOPMENT = True
+
+
+class TestingConfig(Config):
+    DEBUG = True
     DEVELOPMENT = False
+    TESTING = True
+    SQLALCHEMY_DATABASE_URI = os.environ['TEST_DATABASE_URL']
