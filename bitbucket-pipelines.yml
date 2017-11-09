@@ -26,4 +26,4 @@ definitions:
       environment:
         POSTGRES_DB: 'flashy_test'
         POSTGRES_USER: 'flashy_test'
-        POSTGRES_PASSWORD: ''
+        POSTGRES_PASSWORD: 'super_secret'
