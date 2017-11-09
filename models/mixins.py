@@ -4,8 +4,12 @@ import uuid
 from app import db
 
 
+def generate_uuid4_string():
+    return uuid.uuid4().hex
+
+
 class UUIDMixin(object):
-    id = db.Column(db.String(32), primary_key=True, default=lambda: uuid.uuid4().hex)
+    id = db.Column(db.String(32), primary_key=True, default=lambda: generate_uuid4_string())
 
 
 class CreatedMixin(object):
