@@ -1,7 +1,7 @@
 from sqlalchemy.exc import IntegrityError
 
 from tests.base import BaseTestCase
-from tests.models.test_user import create_user
+from tests.test_models.test_user import create_user
 
 from app import db
 from models.deck import Deck

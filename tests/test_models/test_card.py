@@ -1,6 +1,6 @@
 from tests.base import BaseTestCase
-from tests.models.test_deck import create_deck
-from tests.models.test_user import create_user
+from tests.test_models.test_deck import create_deck
+from tests.test_models.test_user import create_user
 
 from sqlalchemy.exc import IntegrityError, StatementError
 
