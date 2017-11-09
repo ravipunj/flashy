@@ -11,8 +11,10 @@ pipelines:
         caches:
           - pip
         script: # Modify the commands below to build your repository.
-          - pip install -r requirements.txt
+          - pip install virtualenv
+          - virtualenv flashyenv
           - source flashyenv/bin/activate
+          - pip install -r requirements.txt
           - python manage.py migrate
           - nosetests -v
 definitions:
