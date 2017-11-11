@@ -1,0 +1,1 @@
+![CI Status](https://travis-ci.org/ravipunj/flashy.svg?branch=master)
