@@ -19,6 +19,8 @@ pipelines:
           - python manage.py db upgrade
           - nosetests -v
           - git push https://heroku:$HEROKU_API_KEY@git.heroku.com/$HEROKU_APP_NAME.git HEAD
+          - heroku run python manage.py db upgrade --app $HEROKU_APP_NAME
+          - heroku run python manage.py runserver --host=0.0.0.0 --app $HEROKU_APP_NAME
         services:
           - postgres
 definitions:
