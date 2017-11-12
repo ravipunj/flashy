@@ -144,13 +144,10 @@ class TestGetCardsForDeck(TestCardBase):
         deck = self._get_deck(owner_id=owner["id"])
         card1 = get_sample_card_data(deck_id=deck["id"])
         card1["id"] = self._add_sample_card(**card1)
-        del card1["deck_id"]
         card2 = get_sample_card_data(deck_id=deck["id"])
         card2["id"] = self._add_sample_card(**card2)
-        del card2["deck_id"]
         card3 = get_sample_card_data(deck_id=deck["id"])
         card3["id"] = self._add_sample_card(**card3)
-        del card3["deck_id"]
 
         deck = self.get_deck(deck_id=deck["id"])
 

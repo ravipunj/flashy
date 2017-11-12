@@ -25,6 +25,5 @@ api_manager.create_api(
                      "owner.password_salt",
                      "owner.password_hash",
                      "cards.created",
-                     "cards.modified",
-                     "cards.deck_id"],
+                     "cards.modified"],
 )
