@@ -1,6 +1,6 @@
 from attrs_sqlalchemy import attrs_sqlalchemy
 
-from app import db
+from app import api_manager, db
 from models.mixins import BaseModelMixin
 
 
@@ -13,3 +13,15 @@ class Deck(BaseModelMixin, db.Model):
     owner_id = db.Column(db.String(32), db.ForeignKey("user.id"))
 
     cards = db.relationship("Card", backref="deck")
+
+api_manager.create_api(
+    Deck,
+    methods=["POST", "GET"],
+    exclude_columns=["created",
+                     "modified",
+                     "owner_id",
+                     "owner.created",
+                     "owner.modified",
+                     "owner.password_salt",
+                     "owner.password_hash"],
+)
