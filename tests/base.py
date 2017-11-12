@@ -1,17 +1,11 @@
+import os
 import unittest
 
-from app import api_manager, app, db
-
-app.config.from_object('config.TestingConfig')
-
-db.app = app
-db.init_app(app)
-
-api_manager.app = app
-api_manager.init_app(app)
+from app import app, db
 
 class BaseTestCase(unittest.TestCase):
     def setUp(self):
+        assert os.environ["APP_SETTINGS"] == "config.TestingConfig"
         db.create_all()
 
         self.test_client = app.test_client()
