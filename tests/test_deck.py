@@ -44,9 +44,6 @@ class TestDeckBase(BaseTestCase):
 
         return owner
 
-    def setUp(self):
-        super(TestDeckBase, self).setUp()
-
     def post_deck(self, data):
         return post_deck(self.test_client, data)
 
