@@ -35,7 +35,7 @@ def process_password(data):
 
 api_manager.create_api(
     User,
-    methods=["POST"],
+    methods=["POST", "GET"],
     exclude_columns=["created", "modified", "password_salt", "password_hash"],
     preprocessors={
         "POST": [process_password],

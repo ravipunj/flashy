@@ -1,11 +1,13 @@
-import os
-import unittest
+from flask_testing import TestCase
 
 from app import app, db
 
-class BaseTestCase(unittest.TestCase):
+class BaseTestCase(TestCase):
+    def create_app(self):
+        app.config.from_object("config.TestingConfig")
+        return app
+
     def setUp(self):
-        assert os.environ["APP_SETTINGS"] == "config.TestingConfig"
         db.create_all()
 
         self.test_client = app.test_client()
