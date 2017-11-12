@@ -1,3 +1,4 @@
+import copy
 import json
 
 import mock
@@ -15,13 +16,16 @@ DISPLAY_NAME = "Test User"
 EMAIL = "unit@test.com"
 
 
-def _get_sample_new_user_data():
-    return {
+def _get_sample_new_user_data(**overrides):
+    user_data = {
         "username": USERNAME,
         "password": PASSWORD,
         "display_name": DISPLAY_NAME,
         "email": EMAIL,
     }
+    user_data.update(overrides)
+
+    return user_data
 
 
 def _get_sample_existing_user_data(**overrides):
@@ -43,6 +47,9 @@ class TestUserBase(BaseTestCase):
     def get_user(self, user_id):
         return self.test_client.get("%s/%s" % (API_URL, user_id), headers=HEADERS)
 
+    def get_all_users(self):
+        return self.test_client.get(API_URL, headers=HEADERS)
+
 
 class TestPostUser(TestUserBase):
     @mock.patch.object(mixins, "generate_uuid4_string", return_value="stub_id")
@@ -60,8 +67,8 @@ class TestPostUser(TestUserBase):
 
 class TestGetUser(TestUserBase):
 
-    def _add_sample_user(self):
-        user_data = _get_sample_new_user_data()
+    def _add_sample_user(self, **overrides):
+        user_data = _get_sample_new_user_data(**overrides)
 
         response = self.post_user(user_data)
 
@@ -74,3 +81,29 @@ class TestGetUser(TestUserBase):
 
         self.assertEqual(200, response.status_code)
         self.assertEqual(_get_sample_existing_user_data(id=user_id), json.loads(response.data))
+
+    def test_get_all_users_returns_all_users(self):
+        user1 = _get_sample_new_user_data()
+        user2 = _get_sample_new_user_data(username="tu2",
+                                          display_name="Test User #2",
+                                          email="tu2@gmail.com")
+        user1["id"] = self._add_sample_user(**user1)
+        user2["id"] = self._add_sample_user(**user2)
+
+        response = self.get_all_users()
+        response_data = json.loads(response.data)
+        response_data["objects"].sort(key=lambda o: o["id"])
+
+        user1.pop("password"), user2.pop("password")
+        expected_user1 = _get_sample_existing_user_data(**user1)
+        expected_user2 = _get_sample_existing_user_data(**user2)
+        self.assert200(response)
+        self.assertDictEqual(
+            {
+                "total_pages": 1,
+                "num_results": 2,
+                "page": 1,
+                "objects": sorted([expected_user1, expected_user2], key=lambda u: u["id"]),
+            },
+            response_data
+        )
