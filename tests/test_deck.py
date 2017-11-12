@@ -6,7 +6,7 @@ import mock
 from tests.base import BaseTestCase
 
 from models import mixins
-from tests.test_user import get_sample_new_user_data, post_user
+from tests.test_user import get_sample_new_user_data, get_user, post_user
 
 
 API_URL = "/api/deck"
@@ -44,6 +44,13 @@ class TestDeckBase(BaseTestCase):
 
         return owner
 
+    def _add_sample_deck(self, **overrides):
+        deck_data = get_sample_deck_data(**overrides)
+
+        response = self.post_deck(deck_data)
+
+        return json.loads(response.data)["id"]
+
     def post_deck(self, data):
         return post_deck(self.test_client, data)
 
@@ -52,6 +59,9 @@ class TestDeckBase(BaseTestCase):
 
     def get_all_decks(self):
         return self.test_client.get(API_URL, headers=HEADERS)
+
+    def get_user(self, user_id):
+        return json.loads(get_user(self.test_client, user_id).data)
 
 
 class TestPostDeck(TestDeckBase):
@@ -70,13 +80,6 @@ class TestPostDeck(TestDeckBase):
 
 
 class TestGetDeck(TestDeckBase):
-
-    def _add_sample_deck(self, **overrides):
-        deck_data = get_sample_deck_data(**overrides)
-
-        response = self.post_deck(deck_data)
-
-        return json.loads(response.data)["id"]
 
     def test_gets_deck(self):
         owner = self._get_owner()
@@ -116,3 +119,22 @@ class TestGetDeck(TestDeckBase):
             },
             response_data
         )
+
+
+class TestGetDecksForOwner(TestDeckBase):
+    def test_gets_decks_for_owner(self):
+        owner = self._get_owner()
+        deck1 = get_sample_deck_data(name="Deck1", owner_id=owner["id"])
+        deck1["id"] = self._add_sample_deck(**deck1)
+        del deck1["cards"]
+        deck2 = get_sample_deck_data(name="Deck2", owner_id=owner["id"])
+        deck2["id"] = self._add_sample_deck(**deck2)
+        del deck2["cards"]
+
+        user = self.get_user(user_id=owner["id"])
+
+        self.assertListEqual(
+            sorted([deck1, deck2], key=lambda d: d["id"]),
+            sorted(user["decks"], key=lambda d: d["id"])
+        )
+
